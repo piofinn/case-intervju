@@ -1,0 +1,19 @@
+{
+  "name": "case-intervju",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/piofinn/case-intervju.git"
+  },
+  "author": "Pio Rasch-Halvorsen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/piofinn/case-intervju/issues"
+  },
+  "homepage": "https://github.com/piofinn/case-intervju#readme"
+}
