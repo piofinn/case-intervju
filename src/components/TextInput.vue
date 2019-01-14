@@ -19,7 +19,6 @@ export default {
   name: "TextInput",
   data: function() {
     return {
-      hasError: false,
       fieldValue: ""
     };
   },
@@ -30,18 +29,21 @@ export default {
     placeholderText: String,
     errorMessage: String,
     validationRegex: RegExp,
-    isShort: Boolean
+    isShort: Boolean,
+    hasError: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
     validationMethod: function() {
-      this.hasError = !this.fieldValue.match(this.validationRegex);
+      this.hasError =
+        !this.fieldValue.match(this.validationRegex) || this.fieldValue === "";
     },
     fieldClass: function() {
       var classes = [];
       this.hasError ? classes.push("has-error") : false;
       this.isShort ? classes.push("short") : false;
-      console.log(classes.join(" "));
-
       return classes.join(" ");
     }
   }
