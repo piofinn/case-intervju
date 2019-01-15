@@ -3,11 +3,10 @@
     <label :for="inputId">{{labelText}}</label>
     <input
       type="text"
-      :class="fieldClass()"
+      :class="{'has-error': hasError, short: isShort}"
       :name="inputName"
       :id="inputId"
-      v-model="fieldValue"
-      @change="validationMethod"
+      @input="$emit('input', $event.target.value)"
       :placeholder="placeholderText"
     >
     <p v-if="hasError" class="field-error-message">{{errorMessage}}</p>
@@ -17,12 +16,11 @@
 <script>
 export default {
   name: "TextInput",
-  data: function() {
-    return {
-      fieldValue: ""
-    };
-  },
   props: {
+    value: {
+      type: String,
+      default: ""
+    },
     inputId: String,
     inputName: String,
     labelText: String,
@@ -33,18 +31,6 @@ export default {
     hasError: {
       type: Boolean,
       default: false
-    }
-  },
-  methods: {
-    validationMethod: function() {
-      this.hasError =
-        !this.fieldValue.match(this.validationRegex) || this.fieldValue === "";
-    },
-    fieldClass: function() {
-      var classes = [];
-      this.hasError ? classes.push("has-error") : false;
-      this.isShort ? classes.push("short") : false;
-      return classes.join(" ");
     }
   }
 };

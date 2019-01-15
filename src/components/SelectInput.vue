@@ -5,7 +5,11 @@
       <span v-if="infoText != ''" class="info-button" @click="toggleInfo">i</span>
       <span v-if="showInfo" class="info-text">{{infoText}}</span>
     </label>
-    <select :name="inputName" :id="inputId">
+    <select
+      :name="inputName"
+      :id="inputId"
+      @change="$emit('input', $event.target.value)"
+      :class="{'has-error': hasError}">
       <option selected disabled aria-disabled="true" value="">{{placeholderText}}</option>
       <option v-for="value in values" :key="value" :value="value">{{value}}</option>
     </select>
@@ -32,6 +36,7 @@ export default {
     },
     placeholderText: String,
     values: Array,
+    value: String,
     errorMessage: String,
     isShort: Boolean,
     hasError: {
@@ -40,15 +45,6 @@ export default {
     }
   },
   methods: {
-    validationMethod: function() {
-      this.hasError = this.fieldValue === "";
-    },
-    fieldClass: function() {
-      var classes = [];
-      this.hasError ? classes.push("has-error") : false;
-      this.isShort ? classes.push("short") : false;
-      return classes.join(" ");
-    },
     toggleInfo: function() {
       this.showInfo = !this.showInfo;
     }

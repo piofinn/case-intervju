@@ -1,7 +1,9 @@
 <template>
   <div id="app" class="container">
     <h1>Kjøp bilforsikring</h1>
-    <p class="intro">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non libero quis erat ultricies dictum nec ut massa. Etiam nec sapien leo. Vestibulum risus arcu, pretium ut dui tincidunt, accumsan blandit metus. Cras eget imperdiet eros.</p>
+    <p
+      class="intro"
+    >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non libero quis erat ultricies dictum nec ut massa. Etiam nec sapien leo. Vestibulum risus arcu, pretium ut dui tincidunt, accumsan blandit metus. Cras eget imperdiet eros.</p>
     <form action v-if="!formSubmitted">
       <text-input
         isShort
@@ -9,9 +11,10 @@
         input-name="registreringsnummer"
         label-text="Bilens registreringsnummer"
         placeholder-text="AB12345"
-        :validation-regex="/^[a-zA-Z]{2}\d{5}$/g"
         error-message="Registreringsnummeret må bestå av to bokstaver og fem tall"
-        :fieldValue="fieldValues.registration"
+        v-model="registration"
+        @input="delayInput($v.registration)"
+        :has-error="$v.registration.$error"
       />
       <select-input
         input-id="input-bonus"
@@ -21,14 +24,18 @@
         error-message="Påkrevd felt"
         placeholder-text="Velg din bonus"
         :values="bonusValues"
+        v-model="bonusValue"
+        :has-error="$v.bonusValue.$error"
       />
       <text-input
         isShort
         input-id="f-nummer"
         input-name="fodselsnummer"
         label-text="Fødselsnummer"
-        :validation-regex="/^\d{11}$/g"
         error-message="Fødselsnummeret må bestå av elleve tall"
+        v-model="fodselsnummer"
+        @input="delayInput($v.fodselsnummer)"
+        :has-error="$v.fodselsnummer.$error"
       />
       <div class="form-row">
         <div class="col col-12 col-sm-4">
@@ -37,6 +44,9 @@
             input-name="fornavn"
             label-text="Fornavn"
             error-message="Påkrevd felt"
+            v-model="firstName"
+            @input="delayInput($v.firstName)"
+            :has-error="$v.firstName.$error"
           />
         </div>
         <div class="col col-12 col-sm-4">
@@ -45,6 +55,9 @@
             input-name="etternavn"
             label-text="Etternavn"
             error-message="Påkrevd felt"
+            v-model="lastName"
+            @input="delayInput($v.lastName)"
+            :has-error="$v.lastName.$error"
           />
         </div>
         <div class="col-sm-auto"></div>
@@ -53,58 +66,92 @@
         input-id="epost"
         input-name="epost"
         label-text="E-post"
-        :validation-regex="/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/g"
         error-message="Skriv inn en gyldig epostadresse"
+        v-model="emailAddress"
+        @input="delayInput($v.emailAddress)"
+        :has-error="$v.emailAddress.$error"
       />
-      <button
-        class="button-submit"
-        @click.prevent="checkForm">
-        Beregn Pris
-      </button>
-      <button
-        class="button-abort"
-        @click.prevent="">
-        Avbryt
-      </button>
+      <button class="button-submit" @click.prevent="checkForm">Beregn Pris</button>
+      <button class="button-abort" @click.prevent>Avbryt</button>
     </form>
+    <div v-else id="pristilbud">Kasko:
+      <br>
+      <span class="pris">1 036,-</span>
+      <br>per måned
+    </div>
   </div>
 </template>
 
 <script>
-import TextInput from "./components/TextInput.vue"
-import SelectInput from "./components/SelectInput.vue"
+import TextInput from "./components/TextInput.vue";
+import SelectInput from "./components/SelectInput.vue";
+import { required, email, helpers } from "vuelidate/lib/validators";
+
+const regNumberVal = helpers.regex("regNUmberVal", /^[a-zA-Z]{2}\d{5}$/g);
+const fNumberVal = helpers.regex("fNumberVal", /^\d{11}$/g);
+const updateMap = new WeakMap();
 
 export default {
   components: {
     TextInput,
-    SelectInput,
+    SelectInput
   },
   data: function() {
     return {
       formSubmitted: false,
-      bonusValues: [
-        "40%", "50%", "60%", "70%"
-      ],
-      fieldValues: {
-        registration: '',
-        bonusValue: '',
-        fNumber: '',
-        firstName: '',
-        lastName: '',
-        emailAddress: ''
-      }
+      bonusValues: ["40%", "50%", "60%", "70%"],
+
+      registration: "",
+      bonusValue: "",
+      fodselsnummer: "",
+      firstName: "",
+      lastName: "",
+      emailAddress: ""
+    };
+  },
+  validations: {
+    registration: {
+      required,
+      regNumberVal
+    },
+    bonusValue: {
+      required
+    },
+    fodselsnummer: {
+      required,
+      fNumberVal
+    },
+    firstName: {
+      required
+    },
+    lastName: {
+      required
+    },
+    emailAddress: {
+      required,
+      email
     }
   },
   methods: {
+    delayInput($v) {
+      $v.$reset();
+      if (updateMap.has($v)) {
+        clearTimeout(updateMap.get($v));
+      }
+      updateMap.set($v, setTimeout($v.$touch, 750));
+    },
     checkForm() {
-      return false;
+      this.$v.$touch();
+      if (!this.$v.$anyError) {
+        this.formSubmitted = true;
+      }
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
-@import 'minireset';
+@import "minireset";
 
 h1 {
   font-size: 3rem;
@@ -122,11 +169,11 @@ button {
   border: none;
   padding: 0 1.5em;
   margin-right: 1rem;
-  
+
   &:focus {
     outline: none;
   }
-  
+
   &.button-submit {
     background-color: #0075d2;
     color: #fff;
@@ -138,11 +185,26 @@ button {
 
   &.button-abort {
     border: 2px solid #ccc;
+    background-color: #fff;
     color: #0075d2;
 
     &:active {
       background-color: #ccc;
     }
+  }
+}
+
+#pristilbud {
+  width: 25%;
+  min-width: 280px;
+  margin: 2rem auto;
+  font-size: 1.5rem;
+  color: #252525;
+
+  span.pris {
+    font-size: 3rem;
+    line-height: 3.5rem;
+    color: #002776;
   }
 }
 </style>
