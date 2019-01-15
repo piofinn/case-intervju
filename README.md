@@ -4,7 +4,7 @@ Komplisert løsning på et enkelt problem. Instruksjoner for nedlasting og kompi
 
 ## nedlasting og installasjon
 
-```console
+```bash
 git clone https://github.com/piofinn/case-intervju && cd case-intervju
 npm install
 ```
