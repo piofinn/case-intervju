@@ -8,7 +8,7 @@
     <select
       :name="inputName"
       :id="inputId"
-      @change="$emit('input', $event.target.value)"
+      @change="$emit('input', $event.target.value)" 
       :class="{'has-error': hasError}">
       <option selected disabled aria-disabled="true" value="">{{placeholderText}}</option>
       <option v-for="value in values" :key="value" :value="value">{{value}}</option>
