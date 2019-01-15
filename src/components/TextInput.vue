@@ -4,12 +4,13 @@
     <input
       type="text"
       :class="{'has-error': hasError, short: isShort}"
+      :aria-invalid="hasError"
       :name="inputName"
       :id="inputId"
       @input="$emit('input', $event.target.value)"
       :placeholder="placeholderText"
     >
-    <p v-if="hasError" class="field-error-message">{{errorMessage}}</p>
+    <p v-if="hasError" role="alert" class="field-error-message">{{errorMessage}}</p>
   </div>
 </template>
 

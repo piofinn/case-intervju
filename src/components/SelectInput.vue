@@ -9,11 +9,12 @@
       :name="inputName"
       :id="inputId"
       @change="$emit('input', $event.target.value)" 
-      :class="{'has-error': hasError}">
+      :class="{'has-error': hasError}"
+      aria-invalid="hasError">
       <option selected disabled aria-disabled="true" value="">{{placeholderText}}</option>
       <option v-for="value in values" :key="value" :value="value">{{value}}</option>
     </select>
-    <p v-if="hasError" class="field-error-message">{{errorMessage}}</p>
+    <p v-if="hasError" role="alert" class="field-error-message">{{errorMessage}}</p>
   </div>
 </template>
 
