@@ -35,9 +35,11 @@ form .input-element-group {
 
     &:focus {
       outline: none;
+      border-color: #002776;
+      border-width: 2px;
     }
 
-    &.has-error {
+    &.has-error, &.has-error:focus {
       border-color: #DA3D00;
       color: #DA3D00;
       border-width: 2px;
