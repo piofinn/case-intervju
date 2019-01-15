@@ -6,8 +6,7 @@
       :class="fieldClass()"
       :name="inputName"
       :id="inputId"
-      v-model="fieldValue"
-      @change="validationMethod"
+      @change="$emit('input', $event.target.value)"
       :placeholder="placeholderText"
     >
     <p v-if="hasError" class="field-error-message">{{errorMessage}}</p>
@@ -17,12 +16,11 @@
 <script>
 export default {
   name: "TextInput",
-  data: function() {
-    return {
-      fieldValue: ""
-    };
-  },
   props: {
+    value: {
+      type: String,
+      default: ""
+    },
     inputId: String,
     inputName: String,
     labelText: String,
