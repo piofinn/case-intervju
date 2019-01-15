@@ -12,7 +12,8 @@
         label-text="Bilens registreringsnummer"
         placeholder-text="AB12345"
         error-message="Registreringsnummeret må bestå av to bokstaver og fem tall"
-        v-model="$v.registration.$model"
+        v-model="registration"
+        @input="delayInput($v.registration)"
         :has-error="$v.registration.$error"
       />
       <select-input
@@ -23,7 +24,7 @@
         error-message="Påkrevd felt"
         placeholder-text="Velg din bonus"
         :values="bonusValues"
-        v-model="$v.bonusValue.$model"
+        v-model="bonusValue"
         :has-error="$v.bonusValue.$error"
       />
       <text-input
@@ -32,7 +33,8 @@
         input-name="fodselsnummer"
         label-text="Fødselsnummer"
         error-message="Fødselsnummeret må bestå av elleve tall"
-        v-model="$v.fodselsnummer.$model"
+        v-model="fodselsnummer"
+        @input="delayInput($v.fodselsnummer)"
         :has-error="$v.fodselsnummer.$error"
       />
       <div class="form-row">
@@ -42,7 +44,8 @@
             input-name="fornavn"
             label-text="Fornavn"
             error-message="Påkrevd felt"
-            v-model="$v.firstName.$model"
+            v-model="firstName"
+            @input="delayInput($v.firstName)"
             :has-error="$v.firstName.$error"
           />
         </div>
@@ -52,7 +55,8 @@
             input-name="etternavn"
             label-text="Etternavn"
             error-message="Påkrevd felt"
-            v-model="$v.lastName.$model"
+            v-model="lastName"
+            @input="delayInput($v.lastName)"
             :has-error="$v.lastName.$error"
           />
         </div>
@@ -63,16 +67,17 @@
         input-name="epost"
         label-text="E-post"
         error-message="Skriv inn en gyldig epostadresse"
-        v-model="$v.emailAddress.$model"
+        v-model="emailAddress"
+        @input="delayInput($v.emailAddress)"
         :has-error="$v.emailAddress.$error"
       />
       <button class="button-submit" @click.prevent="checkForm">Beregn Pris</button>
       <button class="button-abort" @click.prevent>Avbryt</button>
     </form>
-    <div v-else id="pristilbud">
-      Kasko: <br>
-      <span class="pris">1 036,-</span><br>
-      per måned
+    <div v-else id="pristilbud">Kasko:
+      <br>
+      <span class="pris">1 036,-</span>
+      <br>per måned
     </div>
   </div>
 </template>
@@ -84,6 +89,7 @@ import { required, email, helpers } from "vuelidate/lib/validators";
 
 const regNumberVal = helpers.regex("regNUmberVal", /^[a-zA-Z]{2}\d{5}$/g);
 const fNumberVal = helpers.regex("fNumberVal", /^\d{11}$/g);
+const updateMap = new WeakMap();
 
 export default {
   components: {
@@ -127,6 +133,13 @@ export default {
     }
   },
   methods: {
+    delayInput($v) {
+      $v.$reset();
+      if (updateMap.has($v)) {
+        clearTimeout(updateMap.get($v));
+      }
+      updateMap.set($v, setTimeout($v.$touch, 750));
+    },
     checkForm() {
       this.$v.$touch();
       if (!this.$v.$anyError) {
