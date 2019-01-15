@@ -11,10 +11,9 @@
         input-name="registreringsnummer"
         label-text="Bilens registreringsnummer"
         placeholder-text="AB12345"
-        :validation-regex="/^[a-zA-Z]{2}\d{5}$/g"
         error-message="Registreringsnummeret må bestå av to bokstaver og fem tall"
-        v-model="registration"
-        :has-error="$v.fodselsnummer.$error"
+        v-model="$v.registration.$model"
+        :has-error="$v.registration.$error"
       />
       <select-input
         input-id="input-bonus"
@@ -24,14 +23,17 @@
         error-message="Påkrevd felt"
         placeholder-text="Velg din bonus"
         :values="bonusValues"
+        v-model="$v.bonusValue.$model"
+        :has-error="$v.bonusValue.$error"
       />
       <text-input
         isShort
         input-id="f-nummer"
         input-name="fodselsnummer"
         label-text="Fødselsnummer"
-        :validation-regex="/^\d{11}$/g"
         error-message="Fødselsnummeret må bestå av elleve tall"
+        v-model="$v.fodselsnummer.$model"
+        :has-error="$v.fodselsnummer.$error"
       />
       <div class="form-row">
         <div class="col col-12 col-sm-4">
@@ -40,7 +42,8 @@
             input-name="fornavn"
             label-text="Fornavn"
             error-message="Påkrevd felt"
-            v-model="firstName"
+            v-model="$v.firstName.$model"
+            :has-error="$v.firstName.$error"
           />
         </div>
         <div class="col col-12 col-sm-4">
@@ -49,7 +52,8 @@
             input-name="etternavn"
             label-text="Etternavn"
             error-message="Påkrevd felt"
-            v-model="lastName"
+            v-model="$v.lastName.$model"
+            :has-error="$v.lastName.$error"
           />
         </div>
         <div class="col-sm-auto"></div>
@@ -58,12 +62,18 @@
         input-id="epost"
         input-name="epost"
         label-text="E-post"
-        :validation-regex="/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/g"
         error-message="Skriv inn en gyldig epostadresse"
+        v-model="$v.emailAddress.$model"
+        :has-error="$v.emailAddress.$error"
       />
       <button class="button-submit" @click.prevent="checkForm">Beregn Pris</button>
       <button class="button-abort" @click.prevent>Avbryt</button>
     </form>
+    <div v-else id="pristilbud">
+      Kasko: <br>
+      <span class="pris">1 036,-</span><br>
+      per måned
+    </div>
   </div>
 </template>
 
@@ -72,8 +82,8 @@ import TextInput from "./components/TextInput.vue";
 import SelectInput from "./components/SelectInput.vue";
 import { required, email, helpers } from "vuelidate/lib/validators";
 
-const regNumberVal = value => value.match(/^[a-zA-Z]{2}\d{5}$/g);
-const fNumberVal = helpers.regex('fNumberVal', /^\d{11}$/g);
+const regNumberVal = helpers.regex("regNUmberVal", /^[a-zA-Z]{2}\d{5}$/g);
+const fNumberVal = helpers.regex("fNumberVal", /^\d{11}$/g);
 
 export default {
   components: {
@@ -118,7 +128,10 @@ export default {
   },
   methods: {
     checkForm() {
-      return false;
+      this.$v.$touch();
+      if (!this.$v.$anyError) {
+        this.formSubmitted = true;
+      }
     }
   }
 };
@@ -165,6 +178,20 @@ button {
     &:active {
       background-color: #ccc;
     }
+  }
+}
+
+#pristilbud {
+  width: 25%;
+  min-width: 280px;
+  margin: 2rem auto;
+  font-size: 1.5rem;
+  color: #252525;
+
+  span.pris {
+    font-size: 3rem;
+    line-height: 3.5rem;
+    color: #002776;
   }
 }
 </style>

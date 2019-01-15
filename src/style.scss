@@ -36,6 +36,12 @@ form .input-element-group {
     &:focus {
       outline: none;
     }
+
+    &.has-error {
+      border-color: #DA3D00;
+      color: #DA3D00;
+      border-width: 2px;
+    }
   }
 
   input {
@@ -46,12 +52,6 @@ form .input-element-group {
 
     &:focus {
       border-color: #002776;
-      border-width: 2px;
-    }
-
-    &.has-error {
-      border-color: #DA3D00;
-      color: #DA3D00;
       border-width: 2px;
     }
 

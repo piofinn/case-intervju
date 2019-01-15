@@ -3,10 +3,10 @@
     <label :for="inputId">{{labelText}}</label>
     <input
       type="text"
-      :class="fieldClass()"
+      :class="{'has-error': hasError, short: isShort}"
       :name="inputName"
       :id="inputId"
-      @change="$emit('input', $event.target.value)"
+      @input="$emit('input', $event.target.value)"
       :placeholder="placeholderText"
     >
     <p v-if="hasError" class="field-error-message">{{errorMessage}}</p>
@@ -31,18 +31,6 @@ export default {
     hasError: {
       type: Boolean,
       default: false
-    }
-  },
-  methods: {
-    validationMethod: function() {
-      this.hasError =
-        !this.fieldValue.match(this.validationRegex) || this.fieldValue === "";
-    },
-    fieldClass: function() {
-      var classes = [];
-      this.hasError ? classes.push("has-error") : false;
-      this.isShort ? classes.push("short") : false;
-      return classes.join(" ");
     }
   }
 };
