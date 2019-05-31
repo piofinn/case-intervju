@@ -23,16 +23,16 @@
     "vuelidate": "^0.7.4"
   },
   "devDependencies": {
-    "clean-webpack-plugin": "^1.0.0",
-    "css-loader": "^2.1.0",
+    "clean-webpack-plugin": "^1.0.1",
+    "css-loader": "^2.1.1",
     "html-webpack-plugin": "^3.2.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0",
-    "vue-loader": "^15.5.1",
-    "vue-template-compiler": "^2.5.22",
-    "webpack": "^4.28.4",
-    "webpack-cli": "^3.2.1",
-    "webpack-dev-server": "^3.1.14",
+    "vue-loader": "^15.7.0",
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.32.2",
+    "webpack-cli": "^3.3.2",
+    "webpack-dev-server": "^3.4.1",
     "webpack-merge": "^4.2.1",
     "webpack-node-externals": "^1.7.2"
   }
